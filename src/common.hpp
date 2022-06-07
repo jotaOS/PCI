@@ -47,15 +47,26 @@ void write32(Address addr, uint32_t val);
 
 void portcpy(void* dst, Address addr, size_t sz);
 
+union CommandRegister {
+	struct {
+		uint16_t pio : 1;
+		uint16_t mmio : 1;
+		uint16_t busmaster : 1;
+		uint16_t dontCare : 13;
+	} __attribute__((packed));
+	uint16_t raw;
+};
+
 struct CommonDescriptor {
 	uint16_t vendor, device;
-	uint16_t command, status;
+	CommandRegister command; uint16_t status;
 	uint8_t revision, prog, subclassCode, classCode = 0;
 	uint8_t cls, latency, headerType, BIST;
 } __attribute__((packed));
 
 #define VENDOR_OFFSET 0
 #define HEADER_TYPE_OFFSET 14
+#define COMMAND_OFFSET 4
 
 #define BAD_VENDOR 0xFFFF
 
