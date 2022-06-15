@@ -1,6 +1,6 @@
 #include "common.hpp"
 #include <cstdio>
-#include <userspace/PCI>
+#include <userspace/PCI.hpp>
 
 static inline bool hasCapabilities(const Descriptor0& desc) {
 	return desc.common.status & (1 << 4);

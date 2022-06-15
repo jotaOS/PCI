@@ -1,7 +1,7 @@
 #include "common.hpp"
 #include <rpc>
 #include <cstdio>
-#include <userspace/PCI>
+#include <userspace/PCI.hpp>
 
 // TODO: Them locks?
 
