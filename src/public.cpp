@@ -5,10 +5,6 @@
 
 // TODO: Them locks?
 
-static inline bool exists(size_t addr) {
-	return descriptors.find(addr) != descriptors.end();
-}
-
 uint32_t getDevice(std::PID client, size_t classID, size_t subclassID, size_t idx) {
 	IGNORE(client);
 
@@ -16,7 +12,7 @@ uint32_t getDevice(std::PID client, size_t classID, size_t subclassID, size_t id
 	key |= (classID & 0xFF) << 8;
 	key |= subclassID & 0xFF;
 
-	if(classes.find(key) == classes.end())
+	if(!classes.has(key))
 		return std::PCI::BAD_DEVICE;
 
 	if(classes[key].size() <= idx)
@@ -27,7 +23,7 @@ uint32_t getDevice(std::PID client, size_t classID, size_t subclassID, size_t id
 
 uint32_t getBAR(std::PID client, size_t addr, size_t idx) {
 	IGNORE(client);
-	if(!exists(addr))
+	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 	if(idx > 5)
 		return std::PCI::BAD_BAR;
@@ -37,7 +33,7 @@ uint32_t getBAR(std::PID client, size_t addr, size_t idx) {
 
 size_t doMSI(std::PID client, size_t addr, size_t vector) {
 	IGNORE(client);
-	if(!exists(addr))
+	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 
 	return enableMSI(addr, vector);
@@ -51,7 +47,7 @@ static inline Address getCommand(size_t addr) {
 
 size_t enableMMIO(std::PID client, size_t addr) {
 	IGNORE(client);
-	if(!exists(addr))
+	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 
 	Address a = getCommand(addr);
@@ -64,7 +60,7 @@ size_t enableMMIO(std::PID client, size_t addr) {
 
 size_t becomeBusmaster(std::PID client, size_t addr) {
 	IGNORE(client);
-	if(!exists(addr))
+	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 
 	Address a = getCommand(addr);

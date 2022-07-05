@@ -4,7 +4,7 @@
 std::unordered_map<uint16_t, std::vector<uint32_t>> classes;
 
 extern "C" void _start() {
-	if(std::getIO() != 0) {
+	if(std::allowIO() != 0) {
 		std::printf("PCI couldn't get I/O!");
 		std::exit(1);
 	}

@@ -3,6 +3,7 @@
 
 #include <driver>
 #include <unordered_map>
+#include <vector>
 
 // PCI ports
 #define PCI_CONFIG_ADDRESS 0xCF8
