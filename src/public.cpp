@@ -2,11 +2,11 @@
 #include <rpc>
 #include <cstdio>
 #include <userspace/PCI.hpp>
-
-// TODO: Them locks?
+#include <registry>
 
 uint32_t getDevice(std::PID client, size_t classID, size_t subclassID, size_t idx) {
-	IGNORE(client);
+	if(!std::registry::has(client, "PCI_LIST"))
+		return std::PCI::BAD_DEVICE;
 
 	uint16_t key = 0;
 	key |= (classID & 0xFF) << 8;
@@ -22,7 +22,8 @@ uint32_t getDevice(std::PID client, size_t classID, size_t subclassID, size_t id
 }
 
 uint32_t getBAR(std::PID client, size_t addr, size_t idx) {
-	IGNORE(client);
+	if(!std::registry::has(client, "PCI_FULL"))
+		return std::PCI::BAD_DEVICE;
 	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 	if(idx > 5)
@@ -32,7 +33,8 @@ uint32_t getBAR(std::PID client, size_t addr, size_t idx) {
 }
 
 size_t doMSI(std::PID client, size_t addr, size_t vector) {
-	IGNORE(client);
+	if(!std::registry::has(client, "PCI_FULL"))
+		return std::PCI::BAD_DEVICE;
 	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 
@@ -46,7 +48,8 @@ static inline Address getCommand(size_t addr) {
 }
 
 size_t enableMMIO(std::PID client, size_t addr) {
-	IGNORE(client);
+	if(!std::registry::has(client, "PCI_FULL"))
+		return std::PCI::BAD_DEVICE;
 	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 
@@ -59,7 +62,8 @@ size_t enableMMIO(std::PID client, size_t addr) {
 }
 
 size_t becomeBusmaster(std::PID client, size_t addr) {
-	IGNORE(client);
+	if(!std::registry::has(client, "PCI_FULL"))
+		return std::PCI::BAD_DEVICE;
 	if(!descriptors.has(addr))
 		return std::PCI::BAD_DEVICE;
 
